@@ -1,1 +1,1 @@
-# WorkSpace Managment System Software Project
+# Work Space Managment System Software Project
