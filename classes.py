@@ -1,9 +1,12 @@
-class employee:
+class Employee:
     def __init__(self,name):
         self.name = name
+    
 
-        
-class manager(employee):
-    def __init__(self,name,employee):
+class Manager(Employee):
+    def __init__(self,name):
         super().__init__(self,name)
         self.manages = []
+
+    def add_employee(self,employee):
+        self.manages.append(employee)
