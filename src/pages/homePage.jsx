@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react'
 
 import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
-import { Navigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import  {getCurrentUser}  from '../firebaseFunction/auth'
 
 
 
 function App() {
   const [count, setCount] = useState(0)
+   const navigate = useNavigate();
 
   useEffect(() => {
     const user = getCurrentUser();
@@ -16,7 +17,7 @@ function App() {
       console.log("Current user:", user);
     } else {
         console.log("No user is currently logged in.");
-       <Navigate to="/login" />;
+        navigate("/login");
     }
   }, []);
 
