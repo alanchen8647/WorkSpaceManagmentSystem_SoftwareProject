@@ -19,7 +19,7 @@ function App() {
       const user = await loginWithEmailAndPassword(username, password);
       console.log("Logged in user:", user);
       if (user) {        
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       console.error("Login failed:", error);

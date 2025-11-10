@@ -13,7 +13,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<Laryout />}>
-              <Route path="/home" element={<HomePage />} />
+              <Route path="/" element={<HomePage />} />
             </Route>
         </Routes>
       </BrowserRouter>
