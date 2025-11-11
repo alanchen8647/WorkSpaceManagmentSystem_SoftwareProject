@@ -7,6 +7,7 @@ import  {getCurrentUser,checkIfLoggedIn,logoutUser}  from '../firebaseFunction/a
 
 import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
 
+import Clock from '../components/clock.jsx';
 
 
 function App() {
@@ -28,7 +29,20 @@ function App() {
     <>
       <h1>Home Page</h1>
       <p>Welcome, {getCurrentUser() ? getCurrentUser().email : 'Guest'}!</p>
-      
+
+      <div className="flex items-center justify-start mb-4">
+      <button 
+        type="submit"
+        className={`mr-4 px-10 py-2 text-white rounded transition 
+          ${Clockin ? "bg-green-600 hover:bg-green-700" : "bg-red-600 hover:bg-red-700"}
+        `}
+        onClick={() => setClockin(!Clockin)}
+        >
+        {Clockin ? "Clock Out" : "Clock In"}
+      </button>         
+        <p className="text-gray-800 px-3 py-2 text-sm font-medium">Current Time:</p>
+          <Clock />
+    </div> 
 
     <div class="overflow-x-auto w-[90%] max-w-5xl">
     <table class="min-w-full border border-gray-500 text-sm text-gray-800">
