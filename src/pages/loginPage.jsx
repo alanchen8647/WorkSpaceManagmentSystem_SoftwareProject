@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import {db} from '../private/firebase.jsx'
-import { loginWithEmailAndPassword, getCurrentUser } from '../firebaseFunction/auth.jsx';
+import { loginWithEmailAndPassword} from '../firebaseFunction/auth.jsx';
 import {useNavigate} from "react-router-dom";
 
 
@@ -9,33 +8,21 @@ function App() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(getCurrentUser());
-  }, []);
-  
+  // Handle form submission for login
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const user = await loginWithEmailAndPassword(username, password);
-      console.log("Logged in user:", user);
-      if (user) {        
-        navigate("/");
-      }
+      // console.log("Logged in user:", user);
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
 
+  // Render login form
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-white">
-        <body class="h-full">
-        ```
-      */}
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img

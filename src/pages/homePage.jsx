@@ -1,33 +1,18 @@
 import { useState, useEffect } from 'react'
+import { useAuth } from '../context/authContext.jsx';
 
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
-import { useNavigate } from "react-router-dom";
-import  {getCurrentUser,checkIfLoggedIn,logoutUser}  from '../firebaseFunction/auth'
-
-import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
 
 
 
 function App() {
+  const {user} = useAuth();
 
-  const navigate = useNavigate();
-  //Check if user is logged in, if not, redirect to login page
 
-  useEffect(() => {
-    if (!checkIfLoggedIn()) {
-      navigate("/login");
-    } else {
-      console.log("User is logged in:", getCurrentUser());
-      // Optionally, you can fetch some data here
-      console.log(readCasesRecord());
-    }
-  }, []);
 
   return (
     <>
       <h1>Home Page</h1>
-      <p>Welcome, {getCurrentUser() ? getCurrentUser().email : 'Guest'}!</p>
+      <p>Welcome, {user ? user.email : 'Guest'}!</p>
       
 
     <div class="overflow-x-auto w-[90%] max-w-5xl">
