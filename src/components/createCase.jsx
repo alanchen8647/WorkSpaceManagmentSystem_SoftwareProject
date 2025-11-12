@@ -40,7 +40,7 @@ export default function CreateCase({ open, setIsOpen }) {
 
   const [caseData, setCaseData] = useState({
     name: "",
-    caseType: "",
+    caseType: "Single",
     hasDependent: false,
     startDate: "",
     endDate: "",
@@ -48,7 +48,8 @@ export default function CreateCase({ open, setIsOpen }) {
     employee: "",
     notes: [],
     paymentStatus: false,
-    caseStatus: "",
+    caseStatus: "Not Started",
+    pin: {},
   });
 
   const handleChange = (e) => {
@@ -74,6 +75,8 @@ export default function CreateCase({ open, setIsOpen }) {
         employee: "",
         notes: [],
         paymentStatus: false,
+        caseStatus: "",
+        pin: {},
       });
     } catch (err) {
       alert("Failed to create case");
@@ -265,10 +268,9 @@ export default function CreateCase({ open, setIsOpen }) {
                   value={caseData.caseStatus}
                   onChange={handleChange}
                 >
-                  <option value="" disabled selected hidden></option>
-                  <option value="xstart">Not Started</option>
-                  <option value="inprogress">In Progress</option>
-                  <option value="finish">Finished</option>
+                  <option value="Not Started">Not Started</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Finished">Finished</option>
                 </select>
                 {/* ▼ Dropdown indicator */}
                 <span className="absolute right-0 top-2.5 text-gray-500 pointer-events-none">
@@ -299,10 +301,9 @@ export default function CreateCase({ open, setIsOpen }) {
                   value={caseData.caseType}
                   onChange={handleChange}
                 >
-                  <option value="" disabled selected hidden></option>
-                  <option value="single">Single</option>
-                  <option value="recurring">Recurring</option>
-                  <option value="audit">Audit</option>
+                  <option value="Single">Single</option>
+                  <option value="Recurring">Recurring</option>
+                  <option value="Audit">Audit</option>
                 </select>
                 {/* ▼ Dropdown indicator */}
                 <span className="absolute right-0 top-2.5 text-gray-500 pointer-events-none">

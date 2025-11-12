@@ -7,10 +7,11 @@ export const addCasesRecord = async (clientData) => {
     const docRef = await addDoc(collection(db, "Cases"), {
       ...clientData,
       startDate: clientData.startDate
-        ? new Date(clientData.startDate).toISOString()
+        ? Timestamp.fromDate(new Date(clientData.startDate))
         : null,
+
       endDate: clientData.endDate
-        ? new Date(clientData.endDate).toISOString()
+        ? Timestamp.fromDate(new Date(clientData.endDate))
         : null,
     });
     console.log("Document written with ID: ", docRef.id);
