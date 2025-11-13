@@ -8,8 +8,6 @@ function TimeCard({ getCurrentUser }) {
   // Initialize state using the correct localStorage key
   const [Clockin, setClockin] = useState(Boolean(localStorage.getItem(LOCAL_STORAGE_SHIFT_KEY)));
 
-
-
   const handleClockInOut = async () => { // Make async to await operations
     const currentUser = getCurrentUser();
     if (!currentUser) {
