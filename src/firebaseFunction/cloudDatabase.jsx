@@ -1,7 +1,6 @@
 import {collection, addDoc, getDocs} from "firebase/firestore";
 import {db} from "../private/firebase.jsx";
 
-// Add a new document to the "Cases" collection (haven't tested yet, may need adjustments)
 export const addCasesRecord = async (clientData) => {
     try {
         const docRef = await addDoc(collection(db, "Cases"), {
@@ -13,7 +12,6 @@ export const addCasesRecord = async (clientData) => {
     }
 };
 
-// Read all documents from the "Cases" collection
 export const readCasesRecord = async () => {
     const querySnapshot = await getDocs(collection(db, "Cases"));
     let records = [];
@@ -23,8 +21,5 @@ export const readCasesRecord = async () => {
     });
     return records;
 }
-
-//todo: update and delete functions for Cases collection can be added here, query filter function based on requirements
-//
 
 

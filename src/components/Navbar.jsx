@@ -1,10 +1,8 @@
 import {Link} from 'react-router-dom';
-import { Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import {useNavigate} from "react-router-dom";
-import {logoutUser} from "../firebaseFunction/auth.jsx";
-import { useAuth } from '../context/authContext.jsx';
-
+import {getCurrentUser, logoutUser, checkIfLoggedIn} from "../firebaseFunction/auth.jsx";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -17,13 +15,10 @@ const navigation = [
 ]
 
 export default function Navbar() {
+  const currentUser = checkIfLoggedIn() ? getCurrentUser() : null;
   const navigate = useNavigate();
-  const {user} = useAuth();
-  if (!user) { return null; }
-
   const handleLogout = async () => {
     await logoutUser();
-    console.log("Navigating to login page after logout.");
     navigate("/login");
   }
 
@@ -66,9 +61,9 @@ export default function Navbar() {
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {/* Username and Logout Button */}
-            {/* <span className="text-gray-300 px-3 py-2 text-sm font-medium">
-              {user ? user.email : 'Guest'}
-            </span> */}
+            <span className="text-gray-300 px-3 py-2 text-sm font-medium">
+              {currentUser ? currentUser.email : 'Guest'}
+            </span>
             <button onClick={handleLogout} className='bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white hover:cursor-pointer'>
                     Logout
                   </button>

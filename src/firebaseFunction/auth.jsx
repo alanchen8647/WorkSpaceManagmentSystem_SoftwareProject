@@ -1,7 +1,7 @@
 import {auth} from "../private/firebase.jsx";
-import {onAuthStateChanged, signInWithEmailAndPassword} from "firebase/auth";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {useNavigate} from "react-router-dom";
 
-//pass in user email and password to login, will return user object if successful
 export const loginWithEmailAndPassword = async (email, password) => {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -13,7 +13,6 @@ export const loginWithEmailAndPassword = async (email, password) => {
     }
 }
 
-//logout current user when called
 export const logoutUser = async () => {
     try {
         await auth.signOut();
@@ -23,7 +22,14 @@ export const logoutUser = async () => {
     }
 };
 
-//get current logged in user, returns null if no user is logged in
-export const listenToAuthChanges = (callback) => {
-    return onAuthStateChanged(auth, callback);
+export const getCurrentUser = () => {
+    return auth.currentUser;
+}
+
+
+export const checkIfLoggedIn = () => {
+    if (auth.currentUser) {
+        return true;
+    }
+    return false;
 }
