@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/authContext.jsx';
-
-
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
 import { useNavigate } from "react-router-dom";
-import  {getCurrentUser,checkIfLoggedIn,logoutUser}  from '../firebaseFunction/auth'
+import  {getCurrentUser}  from '../firebaseFunction/auth'
 
 import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
 import TimeCard from '../components/TimeCard.jsx';
