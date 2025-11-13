@@ -6,8 +6,6 @@ import { useNavigate } from "react-router-dom";
 import  {getCurrentUser,checkIfLoggedIn,logoutUser}  from '../firebaseFunction/auth'
 
 import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
-
-import Clock from '../components/clock.jsx';
 import TimeCard from '../components/TimeCard.jsx';
 import { get } from 'firebase/database';
 
