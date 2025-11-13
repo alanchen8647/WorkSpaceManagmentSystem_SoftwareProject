@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { useAuth } from '../context/authContext.jsx';
+
 
 import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
@@ -11,23 +13,15 @@ import { get } from 'firebase/database';
 
 
 function App() {
+  const {user} = useAuth();
 
-  const navigate = useNavigate();
-  //Check if user is logged in, if not, redirect to login page
 
-  useEffect(() => {
-    if (!checkIfLoggedIn()) {
-      navigate("/login");
-    } else {
-      console.log("User is logged in:", getCurrentUser());
-      // Optionally, you can fetch some data here
-      console.log(readCasesRecord());
-    }
-  }, []);
 
   return (
     <>
       <h1>Home Page</h1>
+      <p>Welcome, {user ? user.email : 'Guest'}!</p>
+      
       <p>Welcome, {getCurrentUser() ? getCurrentUser().email : 'Guest'}!</p>
 
       <TimeCard getCurrentUser={getCurrentUser} />
