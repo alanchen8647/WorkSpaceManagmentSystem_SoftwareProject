@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/authContext.jsx';
 import { useNavigate } from "react-router-dom";
-import  {getCurrentUser}  from '../firebaseFunction/auth'
 
 import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
 import TimeCard from '../components/TimeCard.jsx';
@@ -11,16 +10,12 @@ import { get } from 'firebase/database';
 function App() {
   const {user} = useAuth();
 
-
-
   return (
     <>
       <h1>Home Page</h1>
       <p>Welcome, {user ? user.email : 'Guest'}!</p>
       
-      <p>Welcome, {getCurrentUser() ? getCurrentUser().email : 'Guest'}!</p>
-
-      <TimeCard getCurrentUser={getCurrentUser} />
+      <TimeCard getCurrentUser={user} />
 
     <div class="overflow-x-auto w-[90%] max-w-5xl">
     <table class="min-w-full border border-gray-500 text-sm text-gray-800">

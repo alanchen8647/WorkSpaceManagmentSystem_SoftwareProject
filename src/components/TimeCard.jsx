@@ -9,7 +9,7 @@ function TimeCard({ getCurrentUser }) {
   const [Clockin, setClockin] = useState(Boolean(localStorage.getItem(LOCAL_STORAGE_SHIFT_KEY)));
 
   const handleClockInOut = async () => { // Make async to await operations
-    const currentUser = getCurrentUser();
+    const currentUser = getCurrentUser;
     if (!currentUser) {
       console.warn("No user logged in.");
       return;
