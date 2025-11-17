@@ -3,7 +3,7 @@ import { loginWithEmailAndPassword} from '../firebaseFunction/auth.jsx';
 import {useNavigate} from "react-router-dom";
 
 
-function App() {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -88,4 +88,4 @@ function App() {
   )
 }
 
-export default App
+export default Login

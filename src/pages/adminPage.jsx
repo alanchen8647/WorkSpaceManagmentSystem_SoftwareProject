@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/authContext.jsx';
-import { useNavigate } from "react-router-dom";
-
-import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
 import TimeCard from '../components/TimeCard.jsx';
-import { get } from 'firebase/database';
 
 
-function HomePage() {
+function AdminPage() {
   const {user} = useAuth();
 
   return (
@@ -86,4 +82,4 @@ function HomePage() {
   )
 }
 
-export default HomePage
+export default AdminPage
