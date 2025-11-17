@@ -1,89 +1,24 @@
-import { useState, useEffect } from 'react'
-import { useAuth } from '../context/authContext.jsx';
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/authContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
-import TimeCard from '../components/TimeCard.jsx';
-import { get } from 'firebase/database';
-
+import { readCasesRecord } from "../firebaseFunction/cloudDatabase";
+import TimeCard from "../components/TimeCard.jsx";
+import { get } from "firebase/database";
+import MyCaseTable from "../components/myCaseTable.jsx";
 
 function App() {
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   return (
     <>
       <h1>Home Page</h1>
-      <p>Welcome, {user ? user.email : 'Guest'}!</p>
-      
-      <TimeCard getCurrentUser={user} />
+      <p>Welcome, {user ? user.email : "Guest"}!</p>
 
-    <div class="overflow-x-auto w-[90%] max-w-5xl">
-    <table class="min-w-full border border-gray-500 text-sm text-gray-800">
-      <thead class="bg-gray-300 text-left">
-        <tr>
-          <th class="px-4 py-2 border-b border-gray-400">name</th>
-          <th class="px-4 py-2 border-b border-gray-400">start Date</th>
-          <th class="px-4 py-2 border-b border-gray-400">Case Status</th>
-          <th class="px-4 py-2 border-b border-gray-400">Payment</th>
-          <th class="px-4 py-2 border-b border-gray-400">Employee</th>
-          <th class="px-4 py-2 border-b border-gray-400">Fee</th>
-          <th class="px-4 py-2 border-b border-gray-400">Note:</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-300">
-        <tr class="bg-gray-100">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-        <tr class="bg-gray-100">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <TimeCard getCurrentUser={user} />
+      <MyCaseTable />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

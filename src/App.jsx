@@ -1,13 +1,12 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
-import HomePage from './pages/HomePage.jsx'
-import LoginPage from './pages/LoginPage.jsx'
-import Layout from './Layout.jsx'
-import { AuthProvider } from './context/authContext.jsx'
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import AllCasesPage from "./pages/allCasesPage.jsx";
+import Layout from "./Layout.jsx";
+import { AuthProvider } from "./context/authContext.jsx";
 
 function App() {
-
   return (
     <>
       <AuthProvider>
@@ -17,15 +16,13 @@ function App() {
             <Route element={<Layout />}>
               {/* Add your page route here follow similar format with HomePage route */}
               <Route path="/" element={<HomePage />} />
+              <Route path="/all-cases" element={<AllCasesPage />} />
             </Route>
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
       </AuthProvider>
-
-
-    
     </>
-  )
+  );
 }
 
-export default App
+export default App;
