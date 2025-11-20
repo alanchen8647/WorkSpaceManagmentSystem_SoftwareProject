@@ -10,14 +10,19 @@ function recordClockIn(CurrentUser) {
   const currentShiftId = newClockInRef.key;
   localStorage.setItem('currentShiftId', currentShiftId);
 
+  const clockin_localtime = new Date().toLocaleString();
+  localStorage.setItem('clockinlocaltime', clockin_localtime);
+
   set(newClockInRef, {
     // No need to store UserId here as it's already in the path structure
     user: CurrentUser.email,
     clockInTimestamp: serverTimestamp(),
-    ClockInLocalTime: new Date().toLocaleString(),
+    ClockInLocalTime: clockin_localtime,
   })
   .then(() => {
     console.log("Clock-in recorded successfully! Shift ID:", currentShiftId);
+    localStorage.setItem("clockin_localtime", clockin_localtime)
+    localStorage.removeItem("clockout_localtime");
   })
   .catch((error) => {
     console.error("Error recording clock-in: ", error);
@@ -34,18 +39,27 @@ function recordClockOut(CurrentUser) { // Pass CurrentUser to get the UID
 
   // Construct the reference to the specific clock-in record under the user's UID
   const shiftRef = ref(db, `clock_ins/${CurrentUser.uid}/${currentShiftId}`);
+  const clockout_localtime = new Date().toLocaleString();
+  localStorage.setItem('clockoutlocaltime', clockout_localtime);
 
   update(shiftRef, {
     clockOutTimestamp: serverTimestamp(),
-    ClockOutLocalTime: new Date().toLocaleString(),
+    ClockOutLocalTime: clockout_localtime,
   })
   .then(() => {
     console.log("Clock-out recorded successfully for shift ID:", currentShiftId);
+    localStorage.setItem("clockout_localtime", clockout_localtime);
     localStorage.removeItem('currentShiftId');
+    localStorage.removeItem('clockin_localtime');
   })
   .catch((error) => {
     console.error("Error recording clock-out: ", error);
   });
 }
 
-export { recordClockIn, recordClockOut };
+function logout_remove_local_storage() {
+  localStorage.removeItem("clockout_localtime");
+  localStorage.removeItem("clockin_localtime");
+}
+
+export { recordClockIn, recordClockOut, logout_remove_local_storage};
