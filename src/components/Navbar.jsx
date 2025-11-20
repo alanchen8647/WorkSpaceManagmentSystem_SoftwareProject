@@ -1,4 +1,5 @@
-import {Link} from 'react-router-dom';
+import {Link,useLocation} from 'react-router-dom';
+import { use, useState } from 'react';
 import { Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import {useNavigate} from "react-router-dom";
@@ -11,21 +12,29 @@ function classNames(...classes) {
 }
 
 const navigation = [
-    { name: 'My Cases', href: 'home', current: true },
-    { name: 'All Cases', href: '#', current: false },
-    { name: 'Task(Task)', href: '#', current: false },
+    { name: 'My Cases', href: ''},
+    { name: 'All Cases', href: '#'},
 ]
 
 export default function Navbar() {
+  const [current ,setCurrent] = useState(useLocation().pathname.replace('/','') || 'My Cases');
   const navigate = useNavigate();
-  const {user} = useAuth();
-  if (!user) { return null; }
+  const {user, userDetail} = useAuth();
+
+  const navItems = userDetail?.admin ?
+    [...navigation,{name:"Admin Panel", href:'admin'}] : navigation;
+
 
   const handleLogout = async () => {
     await logoutUser();
     console.log("Navigating to login page after logout.");
     navigate("/login");
   }
+
+  const handlePageClick = (pageName) => {
+    setCurrent(pageName);
+    navigate(`/${pageName}`);
+  };
 
   return (<>
     <Disclosure as="nav" className="relative bg-gray-800">
@@ -50,13 +59,14 @@ export default function Navbar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {navigation.map((item) => (
+                {navItems.map((item) => (
                   <Link
                     to={`/${item.href}`}
                     className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white hover:cursor-pointer',
+                      current === item.href ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white hover:cursor-pointer',
                       'rounded-md px-3 py-2 text-sm font-medium hover:cursor-pointer',
                     )}
+                    onClick={() => handlePageClick(item.href)}
                   >
                     {item.name}
                   </Link>
@@ -77,19 +87,29 @@ export default function Navbar() {
       </div>
       <DisclosurePanel className="sm:hidden">
         <div className="space-y-1 px-2 pt-2 pb-3">
-          {navigation.map((item) => (
-            <DisclosureButton
-              key={item.name}
-              as="a"
-              href={item.href}
-              aria-current={item.current ? 'page' : undefined}
+          {navItems.map((item) => (
+            // <DisclosureButton
+            //   key={item.name}
+            //   as="a"
+            //   href={item.href}
+            //   aria-current={item.current ? 'page' : undefined}
+            //   className={classNames(
+            //     item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
+            //     'block rounded-md px-3 py-2 text-base font-medium',
+            //   )}
+            // >
+            //   {item.name}
+            // </DisclosureButton>
+              <Link
               className={classNames(
-                item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
-                'block rounded-md px-3 py-2 text-base font-medium',
+                current === item.name ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-white/5 hover:text-white',
+                'block rounded-md px-3 py-2 text-base font-medium hover:bg-white/5 hover:text-white hover:cursor-pointer',
               )}
+              to={`/${item.href}`}
+              onClick={() => handlePageClick(item.href)}
             >
               {item.name}
-            </DisclosureButton>
+              </Link>
           ))}
         </div>
       </DisclosurePanel>

@@ -27,3 +27,4 @@ export const logoutUser = async () => {
 export const listenToAuthChanges = (callback) => {
     return onAuthStateChanged(auth, callback);
 }
+

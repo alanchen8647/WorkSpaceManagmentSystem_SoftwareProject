@@ -1,6 +1,8 @@
 // This context provides authentication state and functions to the application
 import { createContext, useContext, useState, useEffect } from "react";
 import { listenToAuthChanges } from "../firebaseFunction/auth";
+import { doc, getDoc} from "firebase/firestore";
+import { db } from "../private/firebase.jsx";
 
 const AuthContext = createContext();
 
@@ -11,13 +13,25 @@ export const useAuth = () => useContext(AuthContext);
 // Child Components can access user and loading state via useAuth()
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
+    const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
     // Listen to authentication state changes once when the page loads
     useEffect(() => {
         const unsubscribe = listenToAuthChanges((user) => {
             setCurrentUser(user);
-            setLoading(false);
+            const ref = doc(db, "Users", user?.uid);
+            const fetchUserData = async () => {
+                if (user) {
+                    const docSnap = await getDoc(ref);
+                    if (docSnap.exists()) {
+                        const useData = docSnap.data();
+                        setUserData(useData);
+                    }
+                }
+                setLoading(false);
+            };
+            fetchUserData();
         });
         return unsubscribe;
     }, []);
@@ -25,7 +39,8 @@ export const AuthProvider = ({ children }) => {
     // Value provided to consuming components
     const value = {
         user: currentUser,
-        loading
+        loading,
+        userDetail: userData,
     };
 
     // Render the provider with the auth state

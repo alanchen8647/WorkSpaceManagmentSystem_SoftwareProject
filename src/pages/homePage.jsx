@@ -9,7 +9,7 @@ import { get } from 'firebase/database';
 
 function HomePage() {
   const {user} = useAuth();
-
+  
   return (
     <>
       <h1>Home Page</h1>
