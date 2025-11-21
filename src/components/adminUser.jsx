@@ -5,9 +5,9 @@ export default function AdminUserList(user) {;
     return (
         <tr class="bg-gray-100">
                 <td class="px-4 py-2">{user.user.userName}</td>
-                <td class="px-4 py-2"></td>
-                <td class="px-4 py-2"></td>
-                <td class="px-4 py-2"></td>
+                <td class="px-4 py-2">{user.user.clockStatus.clockStatus ? "Clocked In" : "Clocked Out"}</td>
+                <td class="px-4 py-2">{user.user.clockStatus.clockInTime || 'N/A'}</td>
+                <td class="px-4 py-2">{user.user.clockStatus.clockOutTime || 'N/A'}</td>
                 <td class="px-4 py-2">${user.user.cashCollectedToday}</td>
                 <td class="px-4 py-2">${user.user.onlinePayment}</td>
                 <td class="px-4 py-2">{user.user.caseDoneToday}</td>

@@ -1,5 +1,5 @@
 import {realtimeDb} from "../private/firebase.jsx";
-import { ref, set } from "firebase/database";
+import { ref, set, onValue } from "firebase/database";
 
 export const addNewUserData = async (userId, userData) => {
     try {
@@ -8,4 +8,14 @@ export const addNewUserData = async (userId, userData) => {
     } catch (error) {
         console.error("Error adding user data:", error);
     }
+}
+
+export const listenToClockEvents = (callback) => {
+    const clockDataRef = ref(realtimeDb, 'users/');
+    return onValue(clockDataRef, (snapshot) => {
+        const data = snapshot.val();
+        // console.log("Clock Events Data:", data);
+        callback(data);
+    });
+    
 }
