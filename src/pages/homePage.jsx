@@ -3,7 +3,7 @@ import { useAuth } from '../context/authContext.jsx';
 import { useNavigate } from "react-router-dom";
 
 import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
-import TimeCard from '../components/TimeCard.jsx';
+import TimeCard from '../components/timeCardControl.jsx';
 import { get } from 'firebase/database';
 
 

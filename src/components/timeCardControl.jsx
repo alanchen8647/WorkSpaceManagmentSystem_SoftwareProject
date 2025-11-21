@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'; 
-import { recordClockIn, recordClockOut } from './../firebaseFunction/clockin.jsx'; 
+import { recordClockIn, recordClockOut } from '../firebaseFunction/clockin.jsx'; 
 import {Clock} from './clock.jsx';
 
 const LOCAL_STORAGE_SHIFT_KEY = 'currentShiftId'; 

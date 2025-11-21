@@ -20,18 +20,24 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const unsubscribe = listenToAuthChanges((user) => {
             setCurrentUser(user);
-            const ref = doc(db, "Users", user?.uid);
-            const fetchUserData = async () => {
-                if (user) {
-                    const docSnap = await getDoc(ref);
-                    if (docSnap.exists()) {
-                        const useData = docSnap.data();
-                        setUserData(useData);
-                    }
+        const fetchUserData = async (uid) => {
+            try {
+                const userDoc = await getDoc(doc(db, "Users", uid));
+                if (userDoc.exists()) {
+                    setUserData(userDoc.data());
+                } else {
+                    console.log("No such user document!");
                 }
-                setLoading(false);
-            };
-            fetchUserData();
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+        if (user) {
+            fetchUserData(user.uid);
+        } else {
+            setUserData(null);
+        }
+        setLoading(false);
         });
         return unsubscribe;
     }, []);

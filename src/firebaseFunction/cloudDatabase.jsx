@@ -1,4 +1,4 @@
-import {collection, addDoc, getDocs} from "firebase/firestore";
+import {collection, addDoc, getDocs, onSnapshot, query, setDoc, doc} from "firebase/firestore";
 import {db} from "../private/firebase.jsx";
 
 // Add a new document to the "Cases" collection (haven't tested yet, may need adjustments)
@@ -24,7 +24,26 @@ export const readCasesRecord = async () => {
     return records;
 }
 
+export const subscribeToUsersCollection = (callback) =>{
+    const q = query(collection(db, "Users"));
+    return onSnapshot(q, (querySnapshot) => {
+        const users = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        console.log(users);
+        callback(users);
+    });
+}
+
+export const createNewUserRecord = async (userId, userData) => {
+    try {
+        await setDoc(doc(db, "Users", userId), userData);
+        console.log("User record created successfully for userId:", userId);
+    } catch (error) {
+        console.error("Error creating user record:", error);
+    }
+}
+
+
 //todo: update and delete functions for Cases collection can be added here, query filter function based on requirements
-//
-
-

@@ -1,5 +1,5 @@
 import {auth} from "../private/firebase.jsx";
-import {onAuthStateChanged, signInWithEmailAndPassword} from "firebase/auth";
+import {onAuthStateChanged, signInWithEmailAndPassword,createUserWithEmailAndPassword} from "firebase/auth";
 
 //pass in user email and password to login, will return user object if successful
 export const loginWithEmailAndPassword = async (email, password) => {
@@ -28,3 +28,13 @@ export const listenToAuthChanges = (callback) => {
     return onAuthStateChanged(auth, callback);
 }
 
+export const createNewUser = async (email, password) => {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log("Admin created new user:", userCredential.user);
+        return userCredential.user;
+    } catch (error) {
+        console.error("Error creating new user:", error);
+        throw error;
+    }
+}
