@@ -1,14 +1,17 @@
 import AllCaseTable from "../components/allCaseTable";
 import { useAuth } from "../context/authContext.jsx";
 
-export default function AllCasesPage() {
+function App() {
   const { user } = useAuth();
 
   return (
-    <div>
-      <h1>All Cases</h1>
-      {/* Render the list of all cases here */}
+    <>
+      <h1>Home Page</h1>
+      <p>Welcome, {user ? user.email : "Guest"}!</p>
+
       <AllCaseTable />
-    </div>
+    </>
   );
 }
+
+export default App;

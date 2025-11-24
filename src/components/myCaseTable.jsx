@@ -1,85 +1,49 @@
-export default function MyCaseTable() {
+import { useState, useEffect } from 'react';
+import { MyCaseTable } from './Table.jsx';
+import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
+
+function AllCasesPage() {
+  const [cases, setCases] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        setLoading(true);
+        const records = await readCasesRecord();
+        setCases(records);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching cases:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCases();
+  }, []);
+
   return (
-    <div class="overflow-x-auto w-[90%] max-w-5xl">
-      <table class="min-w-full border border-gray-500 text-sm text-gray-800">
-        <thead class="bg-gray-300 text-left">
-          <tr>
-            <th class="px-4 py-2 border-b border-gray-400">name</th>
-            <th class="px-4 py-2 border-b border-gray-400">start Date</th>
-            <th class="px-4 py-2 border-b border-gray-400">Case Status</th>
-            <th class="px-4 py-2 border-b border-gray-400">Payment</th>
-            <th class="px-4 py-2 border-b border-gray-400">Employee</th>
-            <th class="px-4 py-2 border-b border-gray-400">Fee</th>
-            <th class="px-4 py-2 border-b border-gray-400">Note:</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-300">
-          <tr class="bg-gray-100">
-            <td class="px-4 py-2">Alan</td>
-            <td class="px-4 py-2">11/9/2025</td>
-            <td class="px-4 py-2">In Progress</td>
-            <td class="px-4 py-2">Received</td>
-            <td class="px-4 py-2">Jianping</td>
-            <td class="px-4 py-2">$20.00</td>
-            <td class="px-4 py-2">
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                AP
-              </button>
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                BK
-              </button>
-            </td>
-          </tr>
-          <tr class="bg-white">
-            <td class="px-4 py-2">Alan</td>
-            <td class="px-4 py-2">11/9/2025</td>
-            <td class="px-4 py-2">In Progress</td>
-            <td class="px-4 py-2">Received</td>
-            <td class="px-4 py-2">Jianping</td>
-            <td class="px-4 py-2">$20.00</td>
-            <td class="px-4 py-2">
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                AP
-              </button>
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                BK
-              </button>
-            </td>
-          </tr>
-          <tr class="bg-gray-100">
-            <td class="px-4 py-2">Alan</td>
-            <td class="px-4 py-2">11/9/2025</td>
-            <td class="px-4 py-2">In Progress</td>
-            <td class="px-4 py-2">Received</td>
-            <td class="px-4 py-2">Jianping</td>
-            <td class="px-4 py-2">$20.00</td>
-            <td class="px-4 py-2">
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                AP
-              </button>
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                BK
-              </button>
-            </td>
-          </tr>
-          <tr class="bg-white">
-            <td class="px-4 py-2">Alan</td>
-            <td class="px-4 py-2">11/9/2025</td>
-            <td class="px-4 py-2">In Progress</td>
-            <td class="px-4 py-2">Received</td>
-            <td class="px-4 py-2">Jianping</td>
-            <td class="px-4 py-2">$20.00</td>
-            <td class="px-4 py-2">
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                AP
-              </button>
-              <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">
-                BK
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Case Management System</h1>
+        
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            <p className="mt-4 text-gray-600">Loading cases...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12 text-red-600">
+            <p>Error loading cases: {error}</p>
+          </div>
+        ) : (
+          <MyCaseTable cases={cases} />
+        )}
+      </div>
     </div>
   );
 }
+
+export default AllCasesPage;
