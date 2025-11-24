@@ -12,7 +12,8 @@ const firebaseConfig = {
   storageBucket: "wc-employermanagementsystem.firebasestorage.app",
   messagingSenderId: "956979200851",
   appId: "1:956979200851:web:b09581842cb1fb57d417a6",
-  measurementId: "G-4LLSZVPRFQ"
+  measurementId: "G-4LLSZVPRFQ",
+  databaseURL: "https://wc-employermanagementsystem-default-rtdb.firebaseio.com",
 };
 
 // Initialize Firebase

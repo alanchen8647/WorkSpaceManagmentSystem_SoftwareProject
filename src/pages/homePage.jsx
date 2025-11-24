@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext.jsx";
+import { useNavigate } from "react-router-dom";
+
+import { readCasesRecord } from "../firebaseFunction/cloudDatabase";
+import TimeCard from "../components/TimeCard.jsx";
+import { get } from "firebase/database";
 import CreateCase from "../components/createcase.jsx";
 
 function App() {
@@ -16,7 +21,8 @@ function App() {
       <h1>Home Page</h1>
       <p>Welcome, {user ? user.email : "Guest"}!</p>
       <button onClick={handlebutton}>Create Case</button>
-      <CreateCase open={isOpen} setIsOpen={setIsOpen} />
+      <CreateCase open={isOpen} setIsOpen={setIsOpen} />{" "}
+      <TimeCard getCurrentUser={user} />
       <div class="overflow-x-auto w-[90%] max-w-5xl">
         <table class="min-w-full border border-gray-500 text-sm text-gray-800">
           <thead class="bg-gray-300 text-left">
