@@ -45,5 +45,14 @@ export const createNewUserRecord = async (userId, userData) => {
     }
 }
 
+export const readAllEmployees = async () =>{
+    const querySnapshot = await getDocs(collection(db, "Users"));
+    let employees = [];
+    querySnapshot.forEach((doc) => {
+        employees.push({ id: doc.id, ...doc.data() });
+    });
+    return employees;
+}
+
 
 //todo: update and delete functions for Cases collection can be added here, query filter function based on requirements

@@ -9,6 +9,7 @@ export const loginWithEmailAndPassword = async (email, password) => {
         return userCredential.user;
     } catch (error) {
         console.error("Error logging in:", error);
+        alert("Login failed: " + error.message);
         throw error;
     }
 }

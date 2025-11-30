@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../context/authContext.jsx';
 import Adminpanel from '../components/adminPanel.jsx';
 import CreateUserForm from '../components/popUpForms/createUserForm.jsx';
+import ClockTable from '../components/clockTable.jsx';
 
 function AdminPage() {
 
@@ -10,7 +11,7 @@ function AdminPage() {
     <div className="flex items-center justify-end mt-2 mb-2  ">
       <CreateUserForm />
     </div>
-    <div class="overflow-x-auto max-w-5xl pt-1">
+    <div class="overflow-x-auto max-w-full pt-1">
     <table class="min-w-full border border-gray-500 text-sm text-gray-800">
       <thead class="bg-gray-300 text-left">
         <tr>
@@ -29,6 +30,7 @@ function AdminPage() {
       </tbody>
     </table>
   </div>
+  <ClockTable />
     </>
   )
 }
