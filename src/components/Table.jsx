@@ -5,9 +5,31 @@ import EditCase from "./editCase.jsx";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
 
 // Table Component
-export function MyCaseTable({ cases }) {
+export function MyCaseTable({ cases, searchQuery, sortOption }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
+
+  //Search Bar
+  let filteredCases = cases.filter((c) =>
+    c.name?.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  //Dropdown Menu
+  if (sortOption === "nameAsc") 
+    filteredCases.sort((a,b) => a.name.localeCompare(b.name));
+  if (sortOption === "nameDesc") 
+    filteredCases.sort((a,b) => b.name.localeCompare(a.name));
+
+  const getDateSafe = (ts) =>
+    ts?.seconds ? new Date(ts.seconds * 1000) : new Date(0);
+
+  if (sortOption === "startDateAsc") filteredCases.sort((a,b) => 
+    getDateSafe(a.startDate) - getDateSafe(b.startDate));
+  if (sortOption === "startDateDesc") filteredCases.sort((a,b) => 
+    getDateSafe(b.startDate) - getDateSafe(a.startDate));
+  if (sortOption === "endDateAsc") filteredCases.sort((a,b) => 
+    getDateSafe(a.endDate) - getDateSafe(b.endDate));
+  if (sortOption === "endDateDesc") filteredCases.sort((a,b) => 
+    getDateSafe(b.endDate) - getDateSafe(a.endDate));
 
   const formatDateTime = (dateTimeStr) => {
     if (!dateTimeStr) return "N/A";
@@ -34,7 +56,7 @@ export function MyCaseTable({ cases }) {
       style: "currency",
       currency: "USD",
     }).format(fee || 0);
-  };
+  };  
 
   return (
     <div className="overflow-x-auto w-full">
@@ -59,14 +81,14 @@ export function MyCaseTable({ cases }) {
           </tr>
         </thead>
         <tbody>
-          {!cases || cases.length === 0 ? (
+          {!filteredCases || filteredCases.length === 0 ? (
             <tr>
               <td colSpan="10" className="px-4 py-8 text-center text-gray-500">
                 No cases found
               </td>
             </tr>
           ) : (
-            cases.map((caseItem, index) => (
+            filteredCases.map((caseItem, index) => (
               <tr
                 key={caseItem.id || index}
                 className="border-b border-gray-300 hover:bg-gray-50"
