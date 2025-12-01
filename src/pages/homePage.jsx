@@ -6,7 +6,7 @@ import { readCasesRecord } from "../firebaseFunction/cloudDatabase";
 import TimeCard from "../components/TimeCard.jsx";
 import { get } from "firebase/database";
 import MyCaseTable from "../components/myCaseTable.jsx";
-import CreateCase from "../components/createcase.jsx";
+import CreateCase from "../components/createCase.jsx";
 
 function App() {
   const { user } = useAuth();
