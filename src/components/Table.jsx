@@ -3,33 +3,125 @@ import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import EditCase from "./editCase.jsx";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
+import { ColumnFilter} from "./filter.jsx";
 
 // Table Component
-export function MyCaseTable({ cases, searchQuery, sortOption }) {
+export function MyCaseTable({ cases, searchQuery, sortOption, hide_columns={} }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
 
-  //Search Bar
-  let filteredCases = cases.filter((c) =>
-    c.name?.toLowerCase().includes(searchQuery.toLowerCase()));
+  // Filter states for each column
+  const [filters, setFilters] = useState({
+    name: "",
+    caseType: "",
+    caseStatus: "",
+    startDate: "",
+    fee: "",
+    paymentStatus: "",
+    employee: "",
+  });
 
-  //Dropdown Menu
-  if (sortOption === "nameAsc") 
-    filteredCases.sort((a,b) => a.name.localeCompare(b.name));
-  if (sortOption === "nameDesc") 
-    filteredCases.sort((a,b) => b.name.localeCompare(a.name));
+  let filteredCases = cases.filter((c) => {
+    const parseDateFromCase = (dateTimeStr) => {
+      if (!dateTimeStr) return null;
+      
+      if (dateTimeStr.seconds !== undefined && dateTimeStr.nanoseconds !== undefined) {
+        return new Date(dateTimeStr.seconds * 1000);
+      }
+      
+      if (dateTimeStr instanceof Date) {
+        return dateTimeStr;
+      }
+      
+      if (typeof dateTimeStr === 'string') {
+        const parsed = new Date(dateTimeStr);
+        return isNaN(parsed.getTime()) ? null : parsed;
+      }
+      
+      return null;
+    };
+
+    // Name filter
+    const nameMatch = !filters.name || 
+      (c.name && c.name.toLowerCase().includes(filters.name.toLowerCase()));
+    
+    // Case Type filter
+    const typeMatch = !filters.caseType || 
+      (c.caseType && c.caseType.toLowerCase().includes(filters.caseType.toLowerCase()));
+    
+    // Case Status filter
+    const statusMatch = !filters.caseStatus || 
+      (c.caseStatus && c.caseStatus.toLowerCase().includes(filters.caseStatus.toLowerCase()));
+    
+    // Start Date filter - IMPORTANT FIX
+    const startDateMatch = !filters.startDate || 
+      (() => {
+        const caseDate = parseDateFromCase(c.startDate);
+        if (!caseDate) return false;
+        
+        const filterLower = filters.startDate.toLowerCase();
+        
+        // If filter looks like "2024-01-15" (YYYY-MM-DD)
+        if (filterLower.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          const caseDateStr = caseDate.toISOString().split('T')[0];
+          return caseDateStr === filterLower;
+        }
+        
+        // If filter looks like "January 15, 2024"
+        const caseFormatted = caseDate.toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }).toLowerCase();
+        
+        return caseFormatted.includes(filterLower);
+      })();
+    
+    // Fee filter
+    const feeMatch = !filters.fee || 
+      (() => {
+        const caseFee = parseFloat(c.fee) || 0;
+        
+        const formattedFee = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(caseFee).toLowerCase();
+        
+        return formattedFee.includes(filters.fee.toLowerCase());
+      })();
+    
+    // Payment Status filter
+    const paymentMatch = !filters.paymentStatus || 
+      (() => {
+        const filterValue = filters.paymentStatus.toLowerCase();
+        
+        const isPaid = Boolean(c.paymentStatus);
+        
+        if (filterValue === 'paid' || filterValue === 'true') {
+          return isPaid === true;
+        }
+        if (filterValue === 'unpaid' || filterValue === 'false') {
+          return isPaid === false;
+        }
+        
+        const statusText = isPaid ? 'paid' : 'unpaid';
+        return statusText.includes(filterValue);
+      })();
+    
+    // Employee filter
+    const employeeMatch = !filters.employee || 
+      (c.employee && c.employee.toLowerCase().includes(filters.employee.toLowerCase()));    
+    return nameMatch && typeMatch && statusMatch && startDateMatch && feeMatch && paymentMatch && employeeMatch;
+  });
 
   const getDateSafe = (ts) =>
     ts?.seconds ? new Date(ts.seconds * 1000) : new Date(0);
 
-  if (sortOption === "startDateAsc") filteredCases.sort((a,b) => 
-    getDateSafe(a.startDate) - getDateSafe(b.startDate));
-  if (sortOption === "startDateDesc") filteredCases.sort((a,b) => 
-    getDateSafe(b.startDate) - getDateSafe(a.startDate));
-  if (sortOption === "endDateAsc") filteredCases.sort((a,b) => 
-    getDateSafe(a.endDate) - getDateSafe(b.endDate));
-  if (sortOption === "endDateDesc") filteredCases.sort((a,b) => 
-    getDateSafe(b.endDate) - getDateSafe(a.endDate));
+  if (sortOption === "startDateDesc")
+    filteredCases.sort(
+      (a, b) => getDateSafe(b.startDate) - getDateSafe(a.startDate)
+    );
+
 
   const formatDateTime = (dateTimeStr) => {
     if (!dateTimeStr) return "N/A";
@@ -42,42 +134,109 @@ export function MyCaseTable({ cases, searchQuery, sortOption }) {
         year: "numeric",
         month: "long",
         day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        timeZoneName: "short",
       });
     }
     return dateTimeStr;
   };
+
+  if (searchQuery) {
+    filteredCases = filteredCases.filter((c) =>
+      c.employee?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
 
   const formatFee = (fee) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(fee || 0);
-  };  
+  };
+  const updateFilter = (column, value) => {
+    setFilters(prev => ({ ...prev, [column]: value }));
+  };
+
+  const clearFilter = (column) => {
+    setFilters(prev => ({ ...prev, [column]: "" }));
+  };
+
+  const clearAllFilters = () => {
+    setFilters({
+      name: "", 
+      caseType: "", 
+      caseStatus: "", 
+      startDate: "",
+      fee: "",
+      paymentStatus: "", 
+      employee: ""
+    });
+  };
+
+  const hasActiveFilters = Object.values(filters).some(f => f !== "");
 
   return (
     <div className="overflow-x-auto w-full">
       <table className="min-w-full border border-gray-500 text-sm text-gray-800">
         <thead className="bg-gray-300 text-left">
           <tr>
-            <th className="px-4 py-2 border-b border-gray-400">Name</th>
-            <th className="px-4 py-2 border-b border-gray-400">Case Type</th>
-            <th className="px-4 py-2 border-b border-gray-400">Case Status</th>
-            <th className="px-4 py-2 border-b border-gray-400">
-              Has Dependent
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.name ? 'hidden' : ''}`}>Name
+            <ColumnFilter 
+                    column="name" 
+                    label="Name"
+                    filterValue={filters.name}
+                    onFilterChange={updateFilter}
+                    onClearFilter={clearFilter}
+              />
             </th>
-            <th className="px-4 py-2 border-b border-gray-400">Start Date</th>
-            <th className="px-4 py-2 border-b border-gray-400">End Date</th>
-            <th className="px-4 py-2 border-b border-gray-400">Fee</th>
-            <th className="px-4 py-2 border-b border-gray-400">
-              Payment Status
-            </th>
-            <th className="px-4 py-2 border-b border-gray-400">Employee</th>
-            <th className="px-4 py-2 border-b border-gray-400">Notes</th>
-            <th className="px-4 py-2 border-b border-gray-400">Actions</th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.caseType ? 'hidden' : ''}`}>Case Type
+              <ColumnFilter 
+                    column="caseType" 
+                    label="case Type"
+                    filterValue={filters.caseType}
+                    onFilterChange={updateFilter}
+                    onClearFilter={clearFilter}
+                  /></th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.caseStatus ? 'hidden' : ''}`}>Case Status
+              <ColumnFilter 
+                    column="caseStatus" 
+                    label="Case Status"
+                    filterValue={filters.caseStatus}
+                    onFilterChange={updateFilter}
+                    onClearFilter={clearFilter}
+                  /></th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.startDate ? 'hidden' : ''}`}>Start Date
+              <ColumnFilter
+                    column="startDate" 
+                    label="Start Date"
+                    filterValue={filters.startDate}
+                    onFilterChange={updateFilter}
+                    onClearFilter={clearFilter}
+                  /></th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.fee ? 'hidden' : ''}`}>Fee
+              <ColumnFilter
+                    column="fee" 
+                    label="Fee"
+                    filterValue={filters.fee}
+                    onFilterChange={updateFilter}
+                    onClearFilter={clearFilter}
+                  /></th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.paymentStatus ? 'hidden' : ''}`}>Payment Status
+              <ColumnFilter 
+                    column="paymentStatus" 
+                    label="Payment Status"
+                    filterValue={filters.paymentStatus}
+                    onFilterChange={updateFilter}
+                    onClearFilter={clearFilter}
+                  /></th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.employee ? 'hidden' : ''}`}>Employee
+              <ColumnFilter 
+                    column="employee" 
+                    label="Employee"
+                    filterValue={filters.employee}
+                    onFilterChange={updateFilter}
+                    onClearFilter={clearFilter}
+                  /></th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.notes ? 'hidden' : ''}`}>Notes</th>
+            <th className={`px-4 py-2 border-b border-gray-400 ${hide_columns.action ? 'hidden' : ''}`}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -93,22 +252,22 @@ export function MyCaseTable({ cases, searchQuery, sortOption }) {
                 key={caseItem.id || index}
                 className="border-b border-gray-300 hover:bg-gray-50"
               >
-                <td className="px-4 py-2">{caseItem.name || "N/A"}</td>
-                <td className="px-4 py-2">{caseItem.caseType || "N/A"}</td>
-                <td className="px-4 py-2">{caseItem.caseStatus || "N/A"}</td>
-                <td className="px-4 py-2">
-                  {caseItem.hasDependent ? "Yes" : "No"}
+                <td className={`px-4 py-2 ${hide_columns.name ? 'hidden' : ''}`}>
+                  {caseItem.name || "N/A"}
                 </td>
-                <td className="px-4 py-2">
+                <td className={`px-4 py-2 ${hide_columns.caseType ? 'hidden' : ''}`}>
+                  {caseItem.caseType || "N/A"}
+                </td>
+                <td className={`px-4 py-2 ${hide_columns.caseStatus ? 'hidden' : ''}`}>
+                  {caseItem.caseStatus || "N/A"}
+                </td>
+                <td className={`px-4 py-2 ${hide_columns.startDate ? 'hidden' : ''}`}>
                   {formatDateTime(caseItem.startDate)}
                 </td>
-                <td className="px-4 py-2">
-                  {formatDateTime(caseItem.endDate)}
-                </td>
-                <td className="px-4 py-2 font-semibold">
+                <td className={`px-4 py-2 font-semibold ${hide_columns.fee ? 'hidden' : ''}`}>
                   {formatFee(caseItem.fee)}
                 </td>
-                <td className="px-4 py-2">
+                <td className={`px-4 py-2 ${hide_columns.paymentStatus ? 'hidden' : ''}`}>
                   <span
                     className={`px-2 py-1 rounded text-xs font-semibold ${
                       caseItem.paymentStatus
@@ -119,8 +278,10 @@ export function MyCaseTable({ cases, searchQuery, sortOption }) {
                     {caseItem.paymentStatus ? "Paid" : "Unpaid"}
                   </span>
                 </td>
-                <td className="px-4 py-2">{caseItem.employee || "N/A"}</td>
-                <td className="px-4 py-2">
+                <td className={`px-4 py-2 ${hide_columns.employee ? 'hidden' : ''}`}>
+                  {caseItem.employee || "N/A"}
+                </td>
+                <td className={`px-4 py-2 ${hide_columns.notes ? 'hidden' : ''}`}>
                   {caseItem.notes?.length > 0
                     ? `${caseItem.notes.length} note(s)`
                     : "No notes"}

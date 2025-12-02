@@ -59,5 +59,35 @@ export const readCasesRecord = async () => {
   return records;
 };
 
+export const subscribeToUsersCollection = (callback) =>{
+  const q = query(collection(db, "Users"));
+  return onSnapshot(q, (querySnapshot) => {
+      const users = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+      }));
+      console.log(users);
+      callback(users);
+  });
+}
+
+export const createNewUserRecord = async (userId, userData) => {
+  try {
+      await setDoc(doc(db, "Users", userId), userData);
+      console.log("User record created successfully for userId:", userId);
+  } catch (error) {
+      console.error("Error creating user record:", error);
+  }
+}
+
+export const readAllEmployees = async () =>{
+  const querySnapshot = await getDocs(collection(db, "Users"));
+  let employees = [];
+  querySnapshot.forEach((doc) => {
+      employees.push({ id: doc.id, ...doc.data() });
+  });
+  return employees;
+}
+
 //todo: update and delete functions for Cases collection can be added here, query filter function based on requirements
 //
