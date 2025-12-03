@@ -5,6 +5,7 @@ import {
   Timestamp,
   updateDoc,
   doc,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../private/firebase.jsx";
 
@@ -37,6 +38,16 @@ export const editCaseRecord = async (caseId, updatedData) => {
     console.log("Document updated with ID: ", caseId);
   } catch (e) {
     console.error("Error updating document: ", e);
+  }
+};
+
+export const deleteCaseRecord = async (caseId) => {
+  try {
+    const caseRef = doc(db, "Cases", caseId);
+    await deleteDoc(caseRef);
+    console.log("Document Successfully Deleted ", caseId);
+  } catch (e) {
+    console.error("Error deleting document: ", e);
   }
 };
 

@@ -4,6 +4,9 @@ import { Menu, Transition } from "@headlessui/react";
 import EditCase from "./editCase.jsx";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
 import { ColumnFilter } from "./filter.jsx";
+import CaseDetails from "./caseDetails.jsx";
+import { set } from "firebase/database";
+import { deleteCaseRecord } from "../firebaseFunction/cloudDatabase.jsx";
 
 // Table Component
 export function MyCaseTable({
@@ -13,6 +16,7 @@ export function MyCaseTable({
   hide_columns = {},
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
 
   // Filter states for each column
@@ -427,6 +431,39 @@ export function MyCaseTable({
                               </button>
                             )}
                           </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                onClick={() => {
+                                  setSelectedCase(caseItem);
+                                  setIsDetailsOpen(true);
+                                }}
+                                className={`${
+                                  active ? "bg-gray-100" : ""
+                                } block w-full text-left px-4 py-2 text-sm text-gray-700`}
+                              >
+                                Details
+                              </button>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                onClick={() => {
+                                  const confirmed = window.confirm(
+                                    "Are you sure you want to remove?"
+                                  );
+                                  if (!confirmed) return;
+                                  deleteCaseRecord(caseItem.id);
+                                }}
+                                className={`${
+                                  active ? "bg-gray-100" : ""
+                                } block w-full text-left px-4 py-2 text-sm text-gray-700`}
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </Menu.Item>
                         </div>
                       </Menu.Items>
                     </Transition>
@@ -441,6 +478,13 @@ export function MyCaseTable({
         <EditCase
           open={isOpen}
           setIsOpen={setIsOpen}
+          caseDataProp={selectedCase}
+        />
+      )}
+      {isDetailsOpen && selectedCase && (
+        <CaseDetails
+          open={isDetailsOpen}
+          setIsOpen={setIsDetailsOpen}
           caseDataProp={selectedCase}
         />
       )}
