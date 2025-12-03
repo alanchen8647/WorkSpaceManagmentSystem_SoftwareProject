@@ -3,6 +3,10 @@ import { useState } from "react";
 import Modal from "@mui/material/Modal";
 import { addCasesRecord } from "../firebaseFunction/cloudDatabase";
 import ModalForm from "./modalform.jsx";
+import { useEffect } from "react";
+import { listenToAuthChanges } from "../firebaseFunction/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../private/firebase.jsx";
 
 export default function CreateCase({ open, setIsOpen }) {
   const style = {
@@ -17,46 +21,80 @@ export default function CreateCase({ open, setIsOpen }) {
     p: 9,
   };
 
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = listenToAuthChanges(async (user) => {
+      try {
+        if (user) {
+          const userDocRef = doc(db, "Users", user.uid);
+          const userDocSnap = await getDoc(userDocRef);
+
+          if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            setUsername(userData.userName);
+          } else {
+            console.log("No such user document!");
+          }
+        } else {
+          setUsername(null);
+        }
+      } catch (error) {
+        console.error("Error loading user document:", error);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const [caseData, setCaseData] = useState({
     name: "",
-    caseType: "Single",
-    hasDependent: false,
     startDate: "",
-    endDate: "",
     fee: 0,
     employee: "",
-    notes: [],
+    labels: [],
+    caseType: "Single",
     paymentStatus: false,
-    caseStatus: "Not Started",
-    pin: {},
+    caseStatus: "N",
+    cashCollected: 0,
+    electronicPayment: 0,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCaseData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "fee" ? parseFloat(value) : value,
     }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     try {
-      addCasesRecord(caseData);
+      const finalCaseData = {
+        ...caseData,
+        employee: username || caseData.employee,
+        cashCollected: caseData.cashCollected ? caseData.cashCollected : null,
+        electronicPayment: caseData.electronicPayment
+          ? caseData.electronicPayment
+          : null,
+      };
+
+      addCasesRecord(finalCaseData);
       alert("Case Created");
       setCaseData({
         name: "",
-        caseType: "",
-        hasDependent: false,
         startDate: "",
-        endDate: "",
         fee: 0,
-        employee: "",
-        notes: [],
+        employee: username || "",
+        labels: [],
         paymentStatus: false,
         caseStatus: "",
-        pin: {},
+        cashCollected: 0,
+        electronicPayment: 0,
       });
+      alert("Case Created Successfully");
     } catch (err) {
       alert("Failed to create case");
     }
@@ -79,6 +117,7 @@ export default function CreateCase({ open, setIsOpen }) {
             caseData={caseData}
             setCaseData={setCaseData}
             handleChange={handleChange}
+            setIsOpen={setIsOpen}
           />
         </Box>
       </Modal>

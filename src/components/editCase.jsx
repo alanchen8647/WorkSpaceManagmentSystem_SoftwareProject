@@ -16,28 +16,22 @@ export default function EditCase({ open, setIsOpen, caseDataProp }) {
     boxShadow: 24,
     p: 9,
   };
-
-  function timestampToInputValue(ts) {
-    if (!ts || !ts.seconds) return "";
-
-    const date = new Date(ts.seconds * 1000);
-
-    // Convert to yyyy-MM-ddTHH:mm format
-    return date.toISOString().slice(0, 16);
-  }
+  const dateObj = caseDataProp.startDate.toDate();
+  const formattedDate = `${dateObj.getFullYear()}-${(dateObj.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${dateObj.getDate().toString().padStart(2, "0")}`;
 
   const [caseData, setCaseData] = useState({
     name: caseDataProp.name || "",
-    caseType: caseDataProp.caseType || "Single",
-    hasDependent: caseDataProp.hasDependent || false,
-    startDate: timestampToInputValue(caseDataProp.startDate),
-    endDate: timestampToInputValue(caseDataProp.endDate),
+    startDate: formattedDate,
     fee: caseDataProp.fee || 0,
     employee: caseDataProp.employee || "",
-    notes: caseDataProp.notes || [],
+    labels: caseDataProp.labels || [],
     paymentStatus: caseDataProp.paymentStatus || false,
-    caseStatus: caseDataProp.caseStatus || "Not Started",
-    pin: caseDataProp.pin || {},
+    caseType: caseDataProp.caseType || "Single",
+    caseStatus: caseDataProp.caseStatus || "N",
+    cashCollected: caseDataProp.cashCollected || 0,
+    electronicPayment: caseDataProp.electronicPayment || 0,
   });
 
   const handleChange = (e) => {
@@ -50,6 +44,10 @@ export default function EditCase({ open, setIsOpen, caseDataProp }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const confirmed = window.confirm("Are you sure you want to submit?");
+    if (!confirmed) return;
+
     try {
       await editCaseRecord(caseDataProp.id, caseData);
       alert("Case Updated Successfully");
@@ -76,6 +74,7 @@ export default function EditCase({ open, setIsOpen, caseDataProp }) {
             caseData={caseData}
             setCaseData={setCaseData}
             handleChange={handleChange}
+            setIsOpen={setIsOpen}
           />
         </Box>
       </Modal>

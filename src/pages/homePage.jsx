@@ -20,6 +20,7 @@ function App() {
   return (
     <>
       <h1>Home Page</h1>
+
       <p>Welcome, {user ? user.email : "Guest"}!</p>
       <CreateCase open={isOpen} setIsOpen={setIsOpen} />
       <div className="flex items-center justify-between mb-4">
