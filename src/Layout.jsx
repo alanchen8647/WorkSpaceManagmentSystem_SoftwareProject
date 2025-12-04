@@ -7,7 +7,7 @@ export default function Layout() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto max-w-8xl px-2 sm:px-6 lg:px-28">
+      <main className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-28">
         <ProtectedRoute>
           <Outlet />
         </ProtectedRoute>

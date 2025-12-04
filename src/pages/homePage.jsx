@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext.jsx";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@headlessui/react";
-import { readCasesRecord } from "../firebaseFunction/cloudDatabase";
 import TimeCard from "../components/TimeCard.jsx";
-import { get } from "firebase/database";
 import MyCaseTable from "../components/myCaseTable.jsx";
 import CreateCase from "../components/createCase.jsx";
+import { listenToAuthChanges } from "../firebaseFunction/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../private/firebase.jsx";
 
 function App() {
   const { user } = useAuth();
@@ -17,11 +17,40 @@ function App() {
     setIsOpen(true);
   };
 
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = listenToAuthChanges(async (user) => {
+      if (user) {
+        const userDocRef = doc(db, "Users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setUsername(userData.userName);
+        } else {
+          console.log("No such user document!");
+        }
+      } else {
+        setUsername(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <>
-      <h1>Home Page</h1>
+      <div className="py-10">
+        <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight">
+          Welcome Back, {user ? username : "Guest"}!
+        </h1>
 
-      <p>Welcome, {user ? user.email : "Guest"}!</p>
+        <p className="text-xl text-gray-600 mt-3 max-w-2xl mx-auto text-center">
+          Here’s your dashboard overview. Manage cases, track payments, and stay
+          on top of your workflow.
+        </p>
+      </div>
+
       <CreateCase open={isOpen} setIsOpen={setIsOpen} />
       <div className="flex items-center justify-between mb-4">
         <TimeCard getCurrentUser={user} />

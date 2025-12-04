@@ -72,6 +72,9 @@ export default function CreateCase({ open, setIsOpen }) {
     event.preventDefault();
 
     try {
+      const confirmed = window.confirm("Are you sure you want to submit?");
+      if (!confirmed) return;
+
       const finalCaseData = {
         ...caseData,
         employee: username || caseData.employee,
@@ -94,7 +97,6 @@ export default function CreateCase({ open, setIsOpen }) {
         cashCollected: 0,
         electronicPayment: 0,
       });
-      alert("Case Created Successfully");
     } catch (err) {
       alert("Failed to create case");
     }

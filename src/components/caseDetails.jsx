@@ -1,8 +1,7 @@
 import Box from "@mui/material/Box";
 import { useState } from "react";
 import Modal from "@mui/material/Modal";
-import { editCaseRecord } from "../firebaseFunction/cloudDatabase";
-import ModalForm from "./modalform.jsx";
+import { Button } from "@headlessui/react";
 
 function DetailItem({ label, value }) {
   return (
@@ -73,6 +72,16 @@ export default function CaseDetails({ open, setIsOpen, caseDataProp }) {
               value={caseData.electronicPayment}
             />
           </div>
+          <Button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="px-5 py-2.5 font-medium rounded-lg text-sm
+                           bg-gray-200 hover:bg-gray-300 
+                           text-gray-800 shadow-sm 
+                           transition-all duration-200 pt-2.5 mt-6"
+          >
+            Close
+          </Button>
         </Box>
       </Modal>
     </>

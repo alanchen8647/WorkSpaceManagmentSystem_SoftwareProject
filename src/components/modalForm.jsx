@@ -111,7 +111,7 @@ export default function ModalForm({
             peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
             peer-focus:scale-75 peer-focus:-translate-y-6"
           >
-            Payment Status
+            Case Type
           </label>
         </div>
         <div className="relative z-0 w-full mb-5 group">
@@ -309,12 +309,29 @@ export default function ModalForm({
         </div>
       </div>
 
-      <Button
-        type="submit"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
-        Submit
-      </Button>
+      <div className="flex gap-3 mt-6">
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          className="px-5 py-2.5 font-medium rounded-lg text-sm text-white 
+               bg-blue-600 hover:bg-blue-700 
+               shadow-sm transition-all duration-200"
+        >
+          Submit
+        </Button>
+
+        {/* Close Button */}
+        <Button
+          type="button"
+          onClick={() => setIsOpen(false)}
+          className="px-5 py-2.5 font-medium rounded-lg text-sm
+               bg-gray-200 hover:bg-gray-300 
+               text-gray-800 shadow-sm 
+               transition-all duration-200"
+        >
+          Close
+        </Button>
+      </div>
     </form>
   );
 }
