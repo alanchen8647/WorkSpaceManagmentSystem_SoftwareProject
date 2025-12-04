@@ -1,33 +1,36 @@
 import React, { useState, useEffect } from 'react'; 
-import { recordClockIn, recordClockOut } from './../firebaseFunction/clockin.jsx'; 
+import { recordClockIn, recordClockOut } from '../firebaseFunction/clockin.jsx'; 
 import {Clock} from './clock.jsx';
-
-const LOCAL_STORAGE_SHIFT_KEY = 'currentShiftId'; 
+import { getClockInStatus } from '../firebaseFunction/clockin.jsx';
 
 function TimeCard({ getCurrentUser }) {
   // Initialize state using the correct localStorage key
-  const [Clockin, setClockin] = useState(Boolean(localStorage.getItem(LOCAL_STORAGE_SHIFT_KEY)));
+  const [Clockin, setClockin] = useState(false);
 
-  const handleClockInOut = async () => { // Make async to await operations
-    const currentUser = getCurrentUser;
-    if (!currentUser) {
-      console.warn("No user logged in.");
-      return;
-    }
-
-    const isClockedIn = Clockin;
-
-    try {
-      if (!isClockedIn) {
-        await recordClockIn(currentUser); // Await the async function
-      } else {
-        await recordClockOut(currentUser); // Await the async function
+  // Effect to fetch and set the initial clock-in status
+  useEffect(() => {
+    const CurrentUser = getCurrentUser;
+    const unsubscribe = getClockInStatus(CurrentUser, (status) => {
+      setClockin(status);
+    });
+    // Cleanup subscription on unmount
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
       }
-      // Only toggle the state if the database operation was successful
-      setClockin(!isClockedIn);
+    };
+  }, [getCurrentUser]);
+
+  // Function to handle clock in/out button click
+  const handleClockInOut = async () => { // Make async to await operations
+    try {
+      if (!Clockin) {
+        await recordClockIn(getCurrentUser); // Await the async function
+      } else {
+        await recordClockOut(getCurrentUser); // Await the async function
+      }
     } catch (error) {
       console.error("Error during clock in/out operation:", error);
-      // You might want to revert UI state or show an error to the user
     }
   };
 

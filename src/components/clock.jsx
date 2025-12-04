@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+
+//Consider remove this clock components and make it display last Clockout/Clockin time in real-time database
 export function Clock() {
   const [time, setTime] = useState(new Date());
 

@@ -6,6 +6,7 @@ import AllCasesPage from "./pages/allCasesPage.jsx";
 import Layout from "./Layout.jsx";
 import { AuthProvider } from "./context/authContext.jsx";
 
+
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route element={<Layout />}>
               {/* Add your page route here follow similar format with HomePage route */}
+              <Route path="/admin" element={<AdminPage />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/all-cases" element={<AllCasesPage />} />
             </Route>
