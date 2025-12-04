@@ -1,6 +1,7 @@
 import {realtimeDb} from "../private/firebase.jsx";
 import { ref, set, onValue, push, query, orderByChild } from "firebase/database";
 
+// Function to add new user data to the Realtime Database
 export const addNewUserData = async (userId, userData) => {
     try {
         await set(ref(realtimeDb, 'users/' + userId), userData);
@@ -10,6 +11,7 @@ export const addNewUserData = async (userId, userData) => {
     }
 }
 
+// Function to listen to changes in user clock events
 export const listenToClockEvents = (callback) => {
     const clockDataRef = ref(realtimeDb, 'users/');
     return onValue(clockDataRef, (snapshot) => {
@@ -18,6 +20,7 @@ export const listenToClockEvents = (callback) => {
     });
 }
 
+// Function to add a clock ticket to the Realtime Database
 export const addClockTicket = async (clockData) => {
     try {
         const ClockRef = ref(realtimeDb, 'clockTickets/');
@@ -29,6 +32,7 @@ export const addClockTicket = async (clockData) => {
     }
 }
 
+// Function to listen to clock tickets ordered by clock-out time
 export const listenToClockTickets = (callback) => {
     const clockTicketsRef = ref(realtimeDb, 'clockTickets/');
     const sortedQuery = query(clockTicketsRef, orderByChild('clockOut'));

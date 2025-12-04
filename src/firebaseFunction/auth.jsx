@@ -29,6 +29,7 @@ export const listenToAuthChanges = (callback) => {
     return onAuthStateChanged(auth, callback);
 }
 
+// Admin function to create a new user with email and password
 export const createNewUser = async (email, password) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);

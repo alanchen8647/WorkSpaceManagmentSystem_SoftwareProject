@@ -7,6 +7,7 @@ import {listenToClockTickets} from "../firebaseFunction/realTimeDatabase.jsx";
 function ClockTable() {
   const [clockTicketsData, setClockTicketsData] = useState({});
 
+  // Fetch clock tickets data in real-time
   useEffect(()=>{
     const unsubscribe = listenToClockTickets((data) => {
       setClockTicketsData(data);
@@ -34,6 +35,9 @@ function ClockTable() {
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-300">
+        {
+        // Render clock tickets data or show "No Data Available" message
+        }
         {clockTicketsData && Object.entries(clockTicketsData).length > 0 ? (
           Object.entries(clockTicketsData).map(([ticketId, ticket]) => (
             <ClockTickets key={ticketId} {...ticket} />

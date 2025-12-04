@@ -7,6 +7,7 @@ function TimeCard({ getCurrentUser }) {
   // Initialize state using the correct localStorage key
   const [Clockin, setClockin] = useState(false);
 
+  // Effect to fetch and set the initial clock-in status
   useEffect(() => {
     const CurrentUser = getCurrentUser;
     const unsubscribe = getClockInStatus(CurrentUser, (status) => {
@@ -20,7 +21,7 @@ function TimeCard({ getCurrentUser }) {
     };
   }, [getCurrentUser]);
 
-
+  // Function to handle clock in/out button click
   const handleClockInOut = async () => { // Make async to await operations
     try {
       if (!Clockin) {

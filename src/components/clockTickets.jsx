@@ -2,6 +2,7 @@ import {useState} from "react";
 
 export default function ClockTickets(ticket) {
 
+    // Helper functions to format time and date
     const formatTime = (ms) => {
     if (!ms) return "-";
     return new Date(ms).toLocaleTimeString([], {
@@ -10,6 +11,7 @@ export default function ClockTickets(ticket) {
     });
     };
 
+    // Format date helper function
     const formatDate = (ms) => {
     if (!ms) return "-";
     return new Date(ms).toLocaleDateString();

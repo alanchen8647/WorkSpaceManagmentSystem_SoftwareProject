@@ -1,5 +1,6 @@
 import {useState} from "react";
 
+// Function to format timestamp into readable time string
 const formatTime = (ms) => {
     if (!ms) return "-";
     return new Date(ms).toLocaleTimeString([], {
@@ -8,9 +9,8 @@ const formatTime = (ms) => {
     });
     };
 
+// AdminUserList component to display user information in a table row
 export default function AdminUserList(user) {;
-    console.log("User Data in AdminUserList:", user.user);
-    
     return (
         <tr class="bg-gray-100">
                 <td class="px-4 py-2">{user.user.userName}</td>

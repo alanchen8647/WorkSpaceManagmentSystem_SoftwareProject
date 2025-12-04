@@ -2,6 +2,7 @@ import { ref,get, onValue, push, update, set, serverTimestamp } from "firebase/d
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import {realtimeDb, db} from "../private/firebase.jsx";
 
+// Function to get the clock-in status of the current user
 function getClockInStatus(CurrentUser , callback) {
   const userClockStatusRef = ref(realtimeDb, `users/${CurrentUser.uid}/clockInStatus`);
   const unsubscribe = onValue(userClockStatusRef, (snapshot) => {
@@ -13,6 +14,7 @@ function getClockInStatus(CurrentUser , callback) {
   return unsubscribe;
 }
 
+// Function to record clock-in for the current user
 function recordClockIn(CurrentUser) {
   const userClockStatusRef = ref(realtimeDb, `users/${CurrentUser.uid}`);
   const clockInTime = serverTimestamp();
@@ -30,6 +32,8 @@ function recordClockIn(CurrentUser) {
 
 }
 
+
+// Function to record clock-out for the current user
 function recordClockOut(CurrentUser) { // Pass CurrentUser to get the UID
   const clockOutTime = serverTimestamp();
   let clockTicket = {
@@ -94,23 +98,6 @@ function recordClockOut(CurrentUser) { // Pass CurrentUser to get the UID
   ).catch((error) => {
     console.error("Error retrieving user clock-in time: ", error);
   });
-
-
-
-  // // Construct the reference to the specific clock-in record under the user's UID
-  // const shiftRef = ref(db, `clock_ins/${CurrentUser.uid}/${currentShiftId}`);
-
-  // update(shiftRef, {
-  //   clockOutTimestamp: serverTimestamp(),
-  //   ClockOutLocalTime: new Date().toLocaleString(),
-  // })
-  // .then(() => {
-  //   console.log("Clock-out recorded successfully for shift ID:", currentShiftId);
-  //   localStorage.removeItem('currentShiftId');
-  // })
-  // .catch((error) => {
-  //   console.error("Error recording clock-out: ", error);
-  // });
 }
 
 
