@@ -6,8 +6,12 @@ function App() {
 
   return (
     <>
-      <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight">All Cases Page</h1>
-      <AllCaseTable />
+      <div className="py-10">
+        <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight">
+          All Cases Page
+        </h1>
+        <AllCaseTable />
+      </div>
     </>
   );
 }

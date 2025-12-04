@@ -44,11 +44,6 @@ function App() {
         <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight">
           Welcome Back, {user ? username : "Guest"}!
         </h1>
-
-        <p className="text-xl text-gray-600 mt-3 max-w-2xl mx-auto text-center">
-          Here’s your dashboard overview. Manage cases, track payments, and stay
-          on top of your workflow.
-        </p>
       </div>
 
       <CreateCase open={isOpen} setIsOpen={setIsOpen} />
