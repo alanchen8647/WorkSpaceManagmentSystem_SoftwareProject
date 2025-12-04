@@ -8,7 +8,7 @@ import { useAuth } from '../context/authContext.jsx';
 
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 const navigation = [
@@ -29,7 +29,7 @@ export default function Navbar() {
     await logoutUser();
     console.log("Navigating to login page after logout.");
     navigate("/login");
-  }
+  };
 
   const handlePageClick = (pageName) => {
     setCurrent(pageName);
@@ -73,15 +73,18 @@ export default function Navbar() {
                 ))}
               </div>
             </div>
-          </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {/* Username and Logout Button */}
-            {/* <span className="text-gray-300 px-3 py-2 text-sm font-medium">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              {/* Username and Logout Button */}
+              {/* <span className="text-gray-300 px-3 py-2 text-sm font-medium">
               {user ? user.email : 'Guest'}
             </span> */}
-            <button onClick={handleLogout} className='bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white hover:cursor-pointer'>
-                    Logout
-                  </button>
+              <button
+                onClick={handleLogout}
+                className="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium hover:bg-white/5 hover:text-white hover:cursor-pointer"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -115,5 +118,5 @@ export default function Navbar() {
       </DisclosurePanel>
     </Disclosure> 
     </>
-  )
+  );
 }

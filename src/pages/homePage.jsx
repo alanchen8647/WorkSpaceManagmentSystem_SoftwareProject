@@ -1,89 +1,70 @@
-import { useState, useEffect } from 'react'
-import { useAuth } from '../context/authContext.jsx';
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/authContext.jsx";
+import { Button } from "@headlessui/react";
+import TimeCard from "../components/TimeCard.jsx";
+import MyCaseTable from "../components/myCaseTable.jsx";
+import CreateCase from "../components/createCase.jsx";
+import { listenToAuthChanges } from "../firebaseFunction/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../private/firebase.jsx";
 
-import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
-import TimeCard from '../components/timeCardControl.jsx';
-import { get } from 'firebase/database';
+function App() {
+  const { user } = useAuth();
 
+  const [isOpen, setIsOpen] = useState(false);
 
-function HomePage() {
-  const {user} = useAuth();
-  
+  const handlebutton = () => {
+    setIsOpen(true);
+  };
+
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = listenToAuthChanges(async (user) => {
+      if (user) {
+        const userDocRef = doc(db, "Users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          setUsername(userData.userName);
+        } else {
+          console.log("No such user document!");
+        }
+      } else {
+        setUsername(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <>
-      <h1>Home Page</h1>
-      <p>Welcome, {user ? user.email : 'Guest'}!</p>
-      
-      <TimeCard getCurrentUser={user} />
+      <div className="py-10">
+        <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight">
+          Welcome Back, {user ? username : "Guest"}!
+        </h1>
 
-    <div class="overflow-x-auto w-[90%] max-w-5xl">
-    <table class="min-w-full border border-gray-500 text-sm text-gray-800">
-      <thead class="bg-gray-300 text-left">
-        <tr>
-          <th class="px-4 py-2 border-b border-gray-400">name</th>
-          <th class="px-4 py-2 border-b border-gray-400">start Date</th>
-          <th class="px-4 py-2 border-b border-gray-400">Case Status</th>
-          <th class="px-4 py-2 border-b border-gray-400">Payment</th>
-          <th class="px-4 py-2 border-b border-gray-400">Employee</th>
-          <th class="px-4 py-2 border-b border-gray-400">Fee</th>
-          <th class="px-4 py-2 border-b border-gray-400">Note:</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-gray-300">
-        <tr class="bg-gray-100">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-        <tr class="bg-gray-100">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-        <tr class="bg-white">
-          <td class="px-4 py-2">Alan</td>
-          <td class="px-4 py-2">11/9/2025</td>
-          <td class="px-4 py-2">In Progress</td>
-          <td class="px-4 py-2">Received</td>
-          <td class="px-4 py-2">Jianping</td>
-          <td class="px-4 py-2">$20.00</td>
-          <td class="px-4 py-2">
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">AP</button>
-            <button class="bg-orange-300 text-gray-800 rounded-full px-3 py-1 mx-1 text-sm font-semibold">BK</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+        <p className="text-xl text-gray-600 mt-3 max-w-2xl mx-auto text-center">
+          Here’s your dashboard overview. Manage cases, track payments, and stay
+          on top of your workflow.
+        </p>
+      </div>
+
+      <CreateCase open={isOpen} setIsOpen={setIsOpen} />
+      <div className="flex items-center justify-between mb-4">
+        <TimeCard getCurrentUser={user} />
+        <Button
+          onClick={handlebutton}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Create Case
+        </Button>
+      </div>
+
+      <MyCaseTable />
     </>
-  )
+  );
 }
 
-export default HomePage
+export default App;

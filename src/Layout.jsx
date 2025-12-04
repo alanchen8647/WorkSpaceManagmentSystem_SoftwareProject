@@ -1,6 +1,6 @@
-import Navbar from './components/Navbar.jsx'
-import { Outlet } from 'react-router-dom'
-import ProtectedRoute from './components/ProtectedRoute.jsx'
+import Navbar from "./components/Navbar.jsx";
+import { Outlet } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 // Layout component that includes Navbar and wraps protected routes
 export default function Layout() {
