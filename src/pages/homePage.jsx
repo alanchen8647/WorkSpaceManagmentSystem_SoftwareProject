@@ -47,7 +47,7 @@ function App() {
       </div>
 
       <CreateCase open={isOpen} setIsOpen={setIsOpen} />
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between ">
         <TimeCard getCurrentUser={user} />
         <Button
           onClick={handlebutton}

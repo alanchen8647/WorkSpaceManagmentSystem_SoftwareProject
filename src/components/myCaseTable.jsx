@@ -1,10 +1,10 @@
-import { useState, useEffect, use } from 'react';
-import { MyCaseTable } from './Table.jsx';
-import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
-import {db} from "../private/firebase.jsx";
-import { listenToAuthChanges } from '../firebaseFunction/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import {Pagination} from "@mui/material";
+import { useState, useEffect, use } from "react";
+import { MyCaseTable } from "./Table.jsx";
+import { readCasesRecord } from "../firebaseFunction/cloudDatabase";
+import { db } from "../private/firebase.jsx";
+import { listenToAuthChanges } from "../firebaseFunction/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { Pagination } from "@mui/material";
 
 function AllCasesPage() {
   const [cases, setCases] = useState([]);
@@ -39,24 +39,23 @@ function AllCasesPage() {
   useEffect(() => {
     const fetchCases = async () => {
       try {
-        setLoading(true); 
+        setLoading(true);
         const records = await readCasesRecord();
         setCases(records);
 
         // wait for listener to set username
-        const userSpecificCases = records.filter(caseItem => 
-          caseItem.employee === username
+        const userSpecificCases = records.filter(
+          (caseItem) => caseItem.employee === username
         );
         setFilteredCases(userSpecificCases);
 
         setCurrentPage(1);
-        
       } catch (err) {
         setError(err.message);
-        console.error('Error fetching cases:', err);
+        console.error("Error fetching cases:", err);
       } finally {
         setLoading(false);
-      } 
+      }
     };
 
     fetchCases();
@@ -67,10 +66,10 @@ function AllCasesPage() {
   const currentCases = filteredCases.slice(indexOfFirstCase, indexOfLastCase);
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-black-100 p-8">
       <div className="max-w-7xl mx-auto">
         {loading ? (
           <div className="text-center py-12">
@@ -82,8 +81,8 @@ function AllCasesPage() {
             <p>Error loading cases: {error}</p>
           </div>
         ) : (
-          <div className='min-h-screen bg-white p-6 rounded-lg shadow-md'>
-            <MyCaseTable 
+          <div className="min-h-screen bg-white p-6 rounded-lg shadow-md">
+            <MyCaseTable
               cases={currentCases}
               searchQuery={searchQuery}
               sortOption={sortOption}
