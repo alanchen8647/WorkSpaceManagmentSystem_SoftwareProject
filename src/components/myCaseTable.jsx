@@ -4,6 +4,7 @@ import { readCasesRecord } from '../firebaseFunction/cloudDatabase';
 import {db} from "../private/firebase.jsx";
 import { listenToAuthChanges } from '../firebaseFunction/auth';
 import { doc, getDoc } from 'firebase/firestore';
+import {Pagination} from "@mui/material";
 
 function AllCasesPage() {
   const [cases, setCases] = useState([]);
@@ -13,6 +14,8 @@ function AllCasesPage() {
   const [searchQuery] = useState("");
   const [username, setUsername] = useState(null);
   const [filteredCases, setFilteredCases] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const casesPerPage = 10;
 
   useEffect(() => {
     const unsubscribe = listenToAuthChanges(async (user) => {
@@ -45,6 +48,8 @@ function AllCasesPage() {
           caseItem.employee === username
         );
         setFilteredCases(userSpecificCases);
+
+        setCurrentPage(1);
         
       } catch (err) {
         setError(err.message);
@@ -56,6 +61,14 @@ function AllCasesPage() {
 
     fetchCases();
   }, [username]);
+
+  const indexOfLastCase = currentPage * casesPerPage;
+  const indexOfFirstCase = indexOfLastCase - casesPerPage;
+  const currentCases = filteredCases.slice(indexOfFirstCase, indexOfLastCase);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  }
+  
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -70,14 +83,23 @@ function AllCasesPage() {
             <p>Error loading cases: {error}</p>
           </div>
         ) : (
-          <MyCaseTable 
-            cases={filteredCases}
-            searchQuery={searchQuery}
-            sortOption={sortOption}
-            hide_columns={{
-              employee: true,
-            }}
-          />
+          <div className='min-h-screen bg-white p-6 rounded-lg shadow-md'>
+            <MyCaseTable 
+              cases={currentCases}
+              searchQuery={searchQuery}
+              sortOption={sortOption}
+              hide_columns={{
+                employee: true,
+              }}
+            />
+            <div className="flex justify-center mt-6">
+              <Pagination
+                count={Math.ceil(filteredCases.length / casesPerPage)}
+                page={currentPage}
+                onChange={handlePageChange}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>

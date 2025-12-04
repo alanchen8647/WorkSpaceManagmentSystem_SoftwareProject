@@ -207,7 +207,7 @@ export function MyCaseTable({
   const hasActiveFilters = Object.values(filters).some((f) => f !== "");
 
   return (
-    <div className="overflow-x-auto w-full">
+    <div className="overflow-x-auto w-full min-h-[800px]">
       <table className="min-w-full border border-gray-500 text-sm text-gray-800">
         <thead className="bg-gray-300 text-left">
           <tr>
