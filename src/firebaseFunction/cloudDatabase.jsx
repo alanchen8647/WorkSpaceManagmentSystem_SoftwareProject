@@ -6,6 +6,9 @@ import {
   updateDoc,
   doc,
   deleteDoc,
+  query,
+  onSnapshot,
+  setDoc,
 } from "firebase/firestore";
 import { db } from "../private/firebase.jsx";
 

@@ -1,11 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import HomePage from "./pages/HomePage.jsx";
+import HomePage from "./pages/homePage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import AllCasesPage from "./pages/allCasesPage.jsx";
+import AdminPage from "./pages/adminPage.jsx";
 import Layout from "./Layout.jsx";
 import { AuthProvider } from "./context/authContext.jsx";
-
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/authContext.jsx";
 import { Button } from "@headlessui/react";
-import TimeCard from "../components/TimeCard.jsx";
+import TimeCard from "../components/timeCardControl.jsx";
 import MyCaseTable from "../components/myCaseTable.jsx";
 import CreateCase from "../components/createCase.jsx";
 import { listenToAuthChanges } from "../firebaseFunction/auth";
