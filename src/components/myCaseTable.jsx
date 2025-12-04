@@ -68,7 +68,6 @@ function AllCasesPage() {
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   }
-  
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -97,6 +96,7 @@ function AllCasesPage() {
                 count={Math.ceil(filteredCases.length / casesPerPage)}
                 page={currentPage}
                 onChange={handlePageChange}
+                color="primary"
               />
             </div>
           </div>

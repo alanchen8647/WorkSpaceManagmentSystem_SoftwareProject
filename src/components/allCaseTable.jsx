@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { MyCaseTable } from "./Table.jsx";
 import { readCasesRecord } from "../firebaseFunction/cloudDatabase";
+import { Pagination } from "@mui/material";
 
 function AllCasesPage() {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const [sortOption] = useState("startDateDesc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const casesPerPage = 10;
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -15,6 +18,7 @@ function AllCasesPage() {
         setLoading(true);
         const records = await readCasesRecord();
         setCases(records);
+        setCurrentPage(1);
       } catch (err) {
         setError(err.message);
         console.error("Error fetching cases:", err);
@@ -25,6 +29,13 @@ function AllCasesPage() {
 
     fetchCases();
   }, []);
+
+  const indexOfLastCase = currentPage * casesPerPage;
+  const indexOfFirstCase = indexOfLastCase - casesPerPage;
+  const currentCases = cases.slice(indexOfFirstCase, indexOfLastCase);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  }
 
   return (
     <div className="min-h-screen bg-black-100 p-8">
@@ -39,12 +50,21 @@ function AllCasesPage() {
             <p>Error loading cases: {error}</p>
           </div>
         ) : (
-          <MyCaseTable 
-          cases={cases}
-          searchQuery={searchQuery}
-          sortOption={sortOption}
-          
-          />
+          <div className='min-h-screen bg-white p-6 rounded-lg shadow-md'>
+            <MyCaseTable
+              cases={currentCases}
+              searchQuery={searchQuery}
+              sortOption={sortOption}
+            />
+            <div className="flex justify-center mt-6">
+              <Pagination
+                count={Math.ceil(cases.length / casesPerPage)}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"z
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>

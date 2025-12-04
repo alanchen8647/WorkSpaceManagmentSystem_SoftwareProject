@@ -6,9 +6,7 @@ function App() {
 
   return (
     <>
-      <h1>Home Page</h1>
-      <p>Welcome, {user ? user.email : "Guest"}!</p>
-
+      <h1 className="text-5xl font-extrabold text-gray-900 tracking-tight">All Cases Page</h1>
       <AllCaseTable />
     </>
   );
