@@ -1,5 +1,5 @@
 import {realtimeDb} from "../private/firebase.jsx";
-import { ref, set, onValue, push } from "firebase/database";
+import { ref, set, onValue, push, query, orderByChild } from "firebase/database";
 
 export const addNewUserData = async (userId, userData) => {
     try {
@@ -14,7 +14,6 @@ export const listenToClockEvents = (callback) => {
     const clockDataRef = ref(realtimeDb, 'users/');
     return onValue(clockDataRef, (snapshot) => {
         const data = snapshot.val();
-        // console.log("Clock Events Data:", data);
         callback(data);
     });
 }
@@ -32,8 +31,14 @@ export const addClockTicket = async (clockData) => {
 
 export const listenToClockTickets = (callback) => {
     const clockTicketsRef = ref(realtimeDb, 'clockTickets/');
-    return onValue(clockTicketsRef, (snapshot) => {
-        const data = snapshot.val();
+    const sortedQuery = query(clockTicketsRef, orderByChild('clockOut'));
+    return onValue(sortedQuery, (snapshot) => {
+        const dataObject = snapshot.val();
+        const dataArray = Object.keys(dataObject).map(key => ({
+        id: key,
+        ...dataObject[key]
+      }));
+        const data = dataArray.reverse()
         callback(data);
     });
 }

@@ -1,13 +1,22 @@
 import {useState} from "react";
 
+const formatTime = (ms) => {
+    if (!ms) return "-";
+    return new Date(ms).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+    });
+    };
+
 export default function AdminUserList(user) {;
     console.log("User Data in AdminUserList:", user.user);
+    
     return (
         <tr class="bg-gray-100">
                 <td class="px-4 py-2">{user.user.userName}</td>
-                <td class="px-4 py-2">{user.user.clockStatus.clockStatus ? "Clocked In" : "Clocked Out"}</td>
-                <td class="px-4 py-2">{user.user.clockStatus.clockInTime || 'N/A'}</td>
-                <td class="px-4 py-2">{user.user.clockStatus.clockOutTime || 'N/A'}</td>
+                <td class="px-4 py-2">{user.user.clockStatus.clockInStatus ? "Clocked In" : "Clocked Out"}</td>
+                <td class="px-4 py-2">{formatTime(user.user.clockStatus.lastClockInTime) || 'N/A'}</td>
+                <td class="px-4 py-2">{formatTime(user.user.clockStatus.lastClockOutTime) || 'N/A'}</td>
                 <td class="px-4 py-2">${user.user.cashCollectedToday}</td>
                 <td class="px-4 py-2">${user.user.onlinePayment}</td>
                 <td class="px-4 py-2">{user.user.caseDoneToday}</td>
