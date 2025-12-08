@@ -69,7 +69,7 @@ function AllCasesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black-100 p-8">
+    <div className="bg-black-100 p-8">
       <div className="max-w-7xl mx-auto">
         {loading ? (
           <div className="text-center py-12">
@@ -81,7 +81,7 @@ function AllCasesPage() {
             <p>Error loading cases: {error}</p>
           </div>
         ) : (
-          <div className="min-h-screen bg-white p-6 rounded-lg shadow-md">
+          <div className=" bg-white p-6 rounded-lg shadow-md">
             <MyCaseTable
               cases={currentCases}
               searchQuery={searchQuery}
@@ -90,7 +90,7 @@ function AllCasesPage() {
                 employee: true,
               }}
             />
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center -mt-30">
               <Pagination
                 count={Math.ceil(filteredCases.length / casesPerPage)}
                 page={currentPage}

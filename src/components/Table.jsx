@@ -7,6 +7,7 @@ import { ColumnFilter } from "./filter.jsx";
 import CaseDetails from "./caseDetails.jsx";
 import { set } from "firebase/database";
 import { deleteCaseRecord } from "../firebaseFunction/cloudDatabase.jsx";
+import CaseAssign from "./caseAssign.jsx";
 
 // Table Component
 export function MyCaseTable({
@@ -17,6 +18,7 @@ export function MyCaseTable({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isAssignOpen, setIsAssignOpen] = useState(false);
   const [selectedCase, setSelectedCase] = useState(null);
 
   // Filter states for each column
@@ -450,6 +452,21 @@ export function MyCaseTable({
                             {({ active }) => (
                               <button
                                 onClick={() => {
+                                  setSelectedCase(caseItem);
+                                  setIsAssignOpen(true);
+                                }}
+                                className={`${
+                                  active ? "bg-gray-100" : ""
+                                } block w-full text-left px-4 py-2 text-sm text-gray-700`}
+                              >
+                                Assign
+                              </button>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                onClick={() => {
                                   const confirmed = window.confirm(
                                     "Are you sure you want to remove?"
                                   );
@@ -485,6 +502,13 @@ export function MyCaseTable({
         <CaseDetails
           open={isDetailsOpen}
           setIsOpen={setIsDetailsOpen}
+          caseDataProp={selectedCase}
+        />
+      )}
+      {isAssignOpen && selectedCase && (
+        <CaseAssign
+          open={isAssignOpen}
+          setIsOpen={setIsAssignOpen}
           caseDataProp={selectedCase}
         />
       )}

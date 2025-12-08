@@ -95,5 +95,14 @@ export const readAllEmployees = async () => {
   return employees;
 };
 
+export const assignCaseToEmployee = async (caseId, employeeName) => {
+  try {
+    const caseRef = doc(db, "Cases", caseId);
+    await updateDoc(caseRef, { employee: employeeName });
+  } catch (err) {
+    console.error("Error assigning employee:", err);
+    throw err;
+  }
+};
 //todo: update and delete functions for Cases collection can be added here, query filter function based on requirements
 //

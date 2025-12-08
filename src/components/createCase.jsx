@@ -97,6 +97,7 @@ export default function CreateCase({ open, setIsOpen }) {
         cashCollected: 0,
         electronicPayment: 0,
       });
+      setIsOpen(false);
     } catch (err) {
       alert("Failed to create case");
     }
