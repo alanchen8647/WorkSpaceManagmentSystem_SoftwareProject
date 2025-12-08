@@ -14,7 +14,7 @@ export default function Layout() {
         </main>
 
         <footer className="bg-gray-100 text-gray-700 text-center py-4">
-          © 2025 Your Company. All rights reserved.
+          © 2025 WorkSpaceProject. All rights reserved.
         </footer>
       </div>
     </ProtectedRoute>
